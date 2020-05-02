@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/reddit-stub/reddit/reddit.iml" filepath="$PROJECT_DIR$/reddit-stub/reddit/reddit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reddit-stub/reddit/reddit-api/reddit-api.iml" filepath="$PROJECT_DIR$/reddit-stub/reddit/reddit-api/reddit-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reddit-stub/reddit/reddit-db/reddit-db.iml" filepath="$PROJECT_DIR$/reddit-stub/reddit/reddit-db/reddit-db.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reddit-stub/reddit/reddit-service/reddit-service.iml" filepath="$PROJECT_DIR$/reddit-stub/reddit/reddit-service/reddit-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/reddit-stub.iml" filepath="$PROJECT_DIR$/.idea/reddit-stub.iml" />
+    </modules>
+  </component>
+</project>
