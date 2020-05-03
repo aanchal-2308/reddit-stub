@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.List;
 
 /**
  * PostDao class provides the database access for all the endpoints in post controller.
@@ -60,6 +61,14 @@ public class PostDao {
         try {
             return entityManager.createNamedQuery("userByUuid", UserEntity.class).setParameter("uuid", Uuid).getSingleResult();
         } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    public List<PostEntity> getAllPostsByUser(UserEntity user){
+        try {
+            return entityManager.createNamedQuery("postsByUser", PostEntity.class).setParameter("users", user).getResultList();
+        } catch (NoResultException nre){
             return null;
         }
     }

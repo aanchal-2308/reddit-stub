@@ -67,4 +67,56 @@ public class CommentController {
      * @throws InvalidPostException
      */
 
+    //comment on the particular post
+    @RequestMapping(method = RequestMethod.POST, path = "/post/{postId}/comment/create", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<CommentResponse> createComment (@PathVariable("postId") final String postId, @RequestHeader("authorization") final String authorization, final CommentRequest commentRequest) throws AuthorizationFailedException {
+
+        final ZonedDateTime now = ZonedDateTime.now();
+        CommentEntity commentEntity = new CommentEntity();
+        commentEntity.setUuid(UUID.randomUUID().toString());
+        commentEntity.setComment(commentRequest.getComment());
+        commentEntity.setDate(now);
+
+        final CommentEntity createdComment = commentBusinessService.createComment(commentEntity , postId, authorization);
+        CommentResponse commentResponse = new CommentResponse().id(createdComment.getUuid()).status("COMMENT CREATED");
+
+        return new ResponseEntity<CommentResponse>(commentResponse, HttpStatus.CREATED);
+    }
+
+    //edit a comment in database
+    @RequestMapping(method = RequestMethod.PUT, path = "/comment/edit/{commentId}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<CommentResponse> editCommentContent  (@PathVariable("commentId") final String commentId, @RequestHeader("authorization") final String authorization, final CommentEditRequest commentEditRequest) throws AuthorizationFailedException, CommentNotFoundException {
+
+        final ZonedDateTime now = ZonedDateTime.now();
+        CommentEntity commentEntity = new CommentEntity();
+        commentEntity.setComment(commentEditRequest.getContent());
+        commentEntity.setDate(now);
+
+        final CommentEntity editedComment = commentBusinessService.editCommentContent(commentEntity , commentId, authorization);
+        CommentResponse commentResponse = new CommentResponse().id(editedComment.getUuid()).status("COMMENT EDITED");
+
+        return new ResponseEntity<CommentResponse>(commentResponse, HttpStatus.OK);
+    }
+
+    //delete a comment in database
+    @RequestMapping(method = RequestMethod.DELETE, path = "/comment/delete/{commentId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<CommentResponse> deleteComment  (@PathVariable("commentId") final String commentId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, CommentNotFoundException {
+        final CommentEntity deletedComment = commentBusinessService.deleteComment(commentId, authorization);
+        CommentResponse commentResponse = new CommentResponse().id(deletedComment.getUuid()).status("COMMENT DELETED!");
+
+        return new ResponseEntity<CommentResponse>(commentResponse, HttpStatus.OK);
+    }
+
+    //fetch all the comments of a particular user from database
+    @RequestMapping(method = RequestMethod.GET, path = "comment/all/{postId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<CommentDetailsResponse>> getAllCommentsToPost  (@PathVariable("postId") final String postId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, InvalidPostException {
+
+        final List<CommentEntity> allComments = commentBusinessService.getAllCommentsToPost(postId, authorization);
+        final List<CommentDetailsResponse> allCommentDetailsResponse = new ArrayList<CommentDetailsResponse>();
+        for(CommentEntity commentEntity : allComments) {
+            CommentDetailsResponse commentDetailsResponse = new CommentDetailsResponse().id(commentEntity.getUuid()).postContent(commentEntity.getPost().getContent()).commentContent(commentEntity.getComment());
+            allCommentDetailsResponse.add(commentDetailsResponse);
+        }
+        return new ResponseEntity<List<CommentDetailsResponse>>(allCommentDetailsResponse, HttpStatus.OK);
+    }
 }

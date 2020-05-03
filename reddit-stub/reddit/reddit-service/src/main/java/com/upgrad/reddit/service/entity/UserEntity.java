@@ -177,4 +177,11 @@ public class UserEntity {
         this.contactNumber = contactNumber;
     }
 
+    public void setUsername(String userName) {
+        this.userName=userName;
+    }
+
+    public String getUsername() {
+        return userName;
+    }
 }

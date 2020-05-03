@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Import;
 @Import(ServiceConfiguration.class)
 public class RedditApiApplication {
     public static void main(String [] args){
-        SpringApplication.run(RedditApiApplication.class);
+        SpringApplication.run(RedditApiApplication.class,args);
     }
 }

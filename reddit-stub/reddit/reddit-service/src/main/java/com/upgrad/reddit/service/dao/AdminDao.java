@@ -1,5 +1,6 @@
 package com.upgrad.reddit.service.dao;
 
+import com.upgrad.reddit.service.entity.UserAuthEntity;
 import com.upgrad.reddit.service.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
@@ -25,6 +26,13 @@ public class AdminDao {
     public UserEntity getUserByUuid(String uuid) {
         try {
             return entityManager.createNamedQuery("userByUuid", UserEntity.class).setParameter("uuid", uuid).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+    public UserAuthEntity getUserAuthToken(final String accesstoken) {
+        try {
+            return entityManager.createNamedQuery("userAuthTokenByAccessToken", UserAuthEntity.class).setParameter("accessToken", accesstoken).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }

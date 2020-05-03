@@ -1,7 +1,9 @@
 package com.upgrad.reddit.api.controller;
 
 import com.upgrad.reddit.api.model.UserDetailsResponse;
+import com.upgrad.reddit.service.business.AuthenticationService;
 import com.upgrad.reddit.service.business.CommonBusinessService;
+import com.upgrad.reddit.service.dao.UserDao;
 import com.upgrad.reddit.service.entity.UserEntity;
 import com.upgrad.reddit.service.exception.AuthorizationFailedException;
 import com.upgrad.reddit.service.exception.UserNotFoundException;
@@ -16,6 +18,11 @@ public class CommonController {
 
     @Autowired
     private CommonBusinessService commonBusinessService;
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private AuthenticationService authenticationService;
 
     /**
      * A controller method to fetch the details of other user.
@@ -26,4 +33,17 @@ public class CommonController {
      * @throws UserNotFoundException
      * @throws AuthorizationFailedException
      */
+    @RequestMapping(method = RequestMethod.GET, path = "/userprofile/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<UserDetailsResponse> userProfile(@PathVariable("userId") final String userId,
+                                                           @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UserNotFoundException {
+        UserEntity userEntity = commonBusinessService.getUser(userId, authorization);
+
+        UserDetailsResponse userDetailsResponse = new UserDetailsResponse().firstName(userEntity.getFirstName())
+                .lastName(userEntity.getLastName()).emailAddress(userEntity.getEmail())
+                .contactNumber(userEntity.getContactNumber()).dob(userEntity.getDob()).aboutMe(userEntity.getAboutMe())
+                .country(userEntity.getCountry()).userName(userEntity.getUsername());
+
+        return new ResponseEntity<UserDetailsResponse>(userDetailsResponse, HttpStatus.OK);
+
+    }
 }
