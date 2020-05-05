@@ -25,17 +25,7 @@ public class CommonBusinessService {
     public UserEntity getUser(String uuid, String authorization) throws UserNotFoundException, AuthorizationFailedException {
 
         UserAuthEntity userAuthEntity = userDao.getUserAuthByAccesstoken(authorization);
-        UserEntity userEntity = userDao.getUserByUsername(uuid);
-        if (userAuthEntity == null) {
-            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
-        }
-        if (userAuthEntity.getLogoutAt() != null) {
-            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");
-        }
-        if (userEntity == null) {
-            throw new UserNotFoundException("USR-001", "User with entered uuid whose post details are to be seen does not exist");
-        }
+        UserEntity userEntity = userAuthEntity.getUser();
         return userEntity;
     }
-
 }

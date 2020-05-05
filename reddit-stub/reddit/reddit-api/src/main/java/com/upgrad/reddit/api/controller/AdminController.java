@@ -6,15 +6,18 @@ import com.upgrad.reddit.service.entity.UserEntity;
 import com.upgrad.reddit.service.exception.AuthorizationFailedException;
 import com.upgrad.reddit.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@RestController
 @RequestMapping("/admin")
 public class AdminController {
 
-    @Autowired
+   
+ @Autowired
     private AdminBusinessService adminBusinessService;
 
     /**
@@ -27,12 +30,12 @@ public class AdminController {
      * @throws UserNotFoundException
      */
 
-    @RequestMapping(method = RequestMethod.DELETE,path="/admin/user/{userId}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserDeleteResponse> userDelete (@PathVariable("userId") final String userId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UserNotFoundException {
+    @PostMapping("/deleteUser")
+    public ResponseEntity<UserDeleteResponse> deleteUser(@RequestBody String userId, @RequestHeader String authorization) throws AuthorizationFailedException,UserNotFoundException {
+            
+      UserEntity userEntity = adminBusinessService.deleteUser(authorization,userId);
 
-        final UserEntity deletedUserEntity = adminBusinessService.userDelete(userId, authorization);
-        UserDeleteResponse userDeleteResponse = new UserDeleteResponse().id(deletedUserEntity.getUuid()).status("USER SUCCESSFULLY DELETED");
-        return new ResponseEntity<UserDeleteResponse>(userDeleteResponse, HttpStatus.OK);
+            return new ResponseEntity<UserDeleteResponse>(new UserDeleteResponse().id(userId),HttpStatus.OK);
 
     }
 }

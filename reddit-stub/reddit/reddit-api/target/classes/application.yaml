@@ -1,6 +1,6 @@
 server:
   servlet:
-    port: 8000
+    port: 3000
     contextPath: /api
 
 spring:
@@ -8,14 +8,14 @@ spring:
     name: reddit-api
 
   datasource:
-    url: jdbc:postgresql://localhost:3200/reddit
+    url: jdbc:postgresql://localhost:5432/reddit
     username: postgres
     password: admin
-    driverClassName: org.postgresql.Driver
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     properties:
       hibernate:
         temp:
           user_jdbc_metadata_default: false
-    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+        database-platform: org.hibernate.dialect.PostgreSQL9Dialect
